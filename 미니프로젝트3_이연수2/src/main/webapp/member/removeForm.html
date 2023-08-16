@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원탈퇴</title>
+  <link rel="stylesheet" href="/myProject/css/removeForm.css">
+  <link rel="stylesheet" href="/myProject/css/header.css">
+</head>
+<body>
+  <div id="container">
+    <header>
+        <!-- 로고만들기 -->
+        <div id="logo">
+            <a href="/myProject/Index.do"><h1>I love Yeonsu</h1></a>
+        </div>
+        <!-- 메뉴만들기 -->
+        <nav>
+            <ul id="topMenu">
+                <li><a href="#">놀러갈 곳<span>▼</span></a>
+                    <ul>
+                        <li><a href="#">별이언니네</a></li>
+                        <li><a href="#">외할머니네</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">급식이<span>▼</span></a>
+                <ul>
+                    <li><a href="#">초딩</a></li>
+                    <li><a href="#">중딩</a></li>
+                    <li><a href="#">고딩</a></li>
+                </ul>
+                </li>
+                <li><a href="#">갤러리</a></li>
+                <li><a href="#">문의하기</a></li>
+            </ul>
+        </nav>
+    </header>
+</div>
+  <div id="contain">
+    <form action="/myProject/RemoveMember.do" method="get" autocomplete="off" >
+        <h2>회원 탈퇴</h2>
+        <div class="message">회원탈퇴을 위해 비밀번호를 입력해주세요</div>
+        <div class="input-box">
+            <input type="password" name="pwd" id="pwd" placeholder="비밀번호 변경" required/>
+            <label for="pwd">비밀번호 확인</label>
+            <div id="pwdErrorMessage"></div>
+        </div>
+        <input type="submit" value="회원 탈퇴"/>
+        <input type="reset" value="초기화"/>
+    </form>
+    <script src="/myProject/js/inputCheckPWD.js"></script>
+</div>
+</body>
+</html>
