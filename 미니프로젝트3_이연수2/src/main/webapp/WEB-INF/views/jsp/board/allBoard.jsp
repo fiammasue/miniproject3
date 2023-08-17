@@ -33,7 +33,7 @@
 	 <th> <input type='checkbox' class='boardid' name='boardid' value='${board.boardid}'></th>
 	 </c:if>
 		<td class="kk">${board.boardid}</td>
-		<td><a href='${contextPath }/ViewOneBoard.do?boardid=${board.boardid}' class="col">${board.title}</a></td>
+		<td><a href="<c:url value='/board/ViewOneBoard.do?boardid=${board.boardid}'/>" class="col">${board.title}</a></td>
 		<td>${ board.hit}</td>
 		<td>${ board.memberid}</td>
 	</tr>
@@ -44,7 +44,7 @@
 
 </table>
 <a href="/myProject/Index.do">메인페이지로</a>
-<a href="/myProject/InsertForm.do">등록</a>
+<a href="<c:url value='/board/InsertForm.do'/>">등록</a>
 
 <c:if test="${(not empty sessionScope.loginMember) && requestScope.result}">
 	<input class="delete-button" type='submit' value="삭제">
@@ -65,8 +65,9 @@
 		*/            
 		    boardIds.forEach(e => e.checked = allChk.checked);
 		});
-	
+
 	</script>
 	<script src="${contextPath }/js/replyDelete.js"></script>
+
 </body>
 </html>

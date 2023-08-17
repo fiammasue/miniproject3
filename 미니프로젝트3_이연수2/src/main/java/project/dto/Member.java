@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class Member implements Serializable {
 	//필드 : 객체를 파일로 저장하기 위해 직렬화가 필요한데 이를위한 Serializable의 번호
 	private static final long serialVersionUID = -1036524153261734687L;
@@ -51,5 +52,9 @@ public class Member implements Serializable {
 	}
 	public boolean isPwd(String pwd) {
 		return this.pwd.equals(pwd);
+	}
+	public boolean isNamePhone(Member member) {
+		return this.name.equals(member.getName())
+				&& this.phone.equals(member.getPhone());
 	}
 }

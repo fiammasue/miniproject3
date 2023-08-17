@@ -43,9 +43,9 @@
         </tr>
       </table>
         <ul id="link">
-          <li><a href="${contextPath }/member/removeForm.html">회원탈퇴</a> </li>
-          <li><a href="${contextPath }/ReviseForm.do">회원정보수정</a></li> 
-          <li><a href="${contextPath }/Index.do">메인페이지로</a></li>
+          <li><a href="<c:url value='/member/removeForm.html'/>">회원탈퇴</a> </li>
+          <li><a href="<c:url value='/member/ReviseForm.do'/>">회원정보수정</a></li> 
+          <li><a href="<c:url value='/member/Index.do'/>">메인페이지로</a></li>
         </ul>
       </div>
     </body>

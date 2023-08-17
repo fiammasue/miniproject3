@@ -31,9 +31,9 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			ConnectionHelper.close(conn);
-			ConnectionHelper.close(pstmt);
 			ConnectionHelper.close(rs);
+			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		
 		return false;
@@ -60,8 +60,8 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			ConnectionHelper.close(conn);
 			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		return count;
 	}
@@ -94,9 +94,9 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			ConnectionHelper.close(conn);
-			ConnectionHelper.close(pstmt);
 			ConnectionHelper.close(rs);
+			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		
 		return null;
@@ -115,8 +115,8 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			ConnectionHelper.close(conn);
 			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		
 	}
@@ -149,9 +149,9 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			ConnectionHelper.close(conn);
-			ConnectionHelper.close(pstmt);
 			ConnectionHelper.close(rs);
+			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		
 		return findMember;
@@ -182,9 +182,9 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			ConnectionHelper.close(conn);
-			ConnectionHelper.close(pstmt);
 			ConnectionHelper.close(rs);
+			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		
 		
@@ -199,7 +199,7 @@ public class MemberDAOImpl implements MemberDAO{
 	public void updateMember(Member member) {
 		Connection conn = ConnectionHelper.getConnection("oracle");
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+
 		String sql = "update member set name=?,pwd=?,age=?,phone=?,address=?,gender=? where memberid=?";
 		
 		try {
@@ -215,6 +215,9 @@ public class MemberDAOImpl implements MemberDAO{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			ConnectionHelper.close(pstmt);
+			ConnectionHelper.close(conn);
 		}
 		
 	}

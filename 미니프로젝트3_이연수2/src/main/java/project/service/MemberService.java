@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import project.dao.MemberDAO;
 import project.dto.Member;
-import project.dto.ResultMember;
+
 
 public class MemberService {
 	private MemberDAO memberDAO;
@@ -56,113 +56,98 @@ public class MemberService {
 		return jsonResult; 
 	}
 	//비밀번호 찾기
-	public String pwdFind(Member member) {
-//		ResultMember result = new ResultMember();
-		String message ="";
+	public JSONObject pwdFind(Member member) {
+		JSONObject jsonObject = new JSONObject();
 		//아이디에 해당하는 사람이 존재하면 회원 가져오기
     	if(isExistUid(member.getUid())){
-    		Member mem = getMember(member.getUid());
-    		System.out.println("member = "+member);
+    		Member temp = getMember(member.getUid());
     		//가저온 회원의 이름과 폰번호 정보가 일치하면 비밀번호를 변경한다.
-    		if(mem.getName().equals(member.getName())
-    				&& mem.getPhone().equals(member.getPhone())){
-    			
-    			mem.setPwd(member.getPwd());
+    		if(temp.isNamePhone(member)){
+    			temp.setPwd(member.getPwd());
     			//비밀번호가 바뀐 회원의 정보를 DB에 업데이트한다.
-    			updateMember(mem);
-    			 System.out.println("member = "+ mem);
-    			//이것도 함수 만들어야하나? public static void revisePwd(Member member,String pwd)
-    			//MemberService.saveFileMemberMap();
+    			updateMember(temp);
     			 
     			//비밀번호 변경완료 메세지 전달
-    			 
-    			message="비밀번호가 변경되었습니다.";
+    			jsonObject.put("message", "비밀번호가 변경되었습니다.");
     		}else{
-    			
-    			message="본인인증에 실패했습니다.";
+    			jsonObject.put("message","본인인증에 실패했습니다.");
     		}
     	}else{
-    		message="아이디가 존재하지 않습니다.";
+    		jsonObject.put("message","아이디가 존재하지 않습니다.");
     	}
 		
-		return message;
+		return jsonObject;
 	}
 	//회원 탈퇴
-	public String removeMember(Member member) {
-		String message = "";
+	public JSONObject removeMember(Member member) {
+		JSONObject jsonObject = new JSONObject();
 		//관리자 아이디는 삭제 불가
     	if(!isExistUid("root")){
-    		message="관리자 아이디는 삭제 불가능합니다.";
+    		jsonObject.put("message", "관리자 아이디는 삭제 불가능합니다.");
+    		jsonObject.put("status",true);
     	}
     	else{
     		//아이디에 해당하는 회원 가져오기
-    		Member mem = getMember(member.getUid());
+    		Member temp = getMember(member.getUid());
     		//비밀번호가 일치하면 회원삭제
-    		if(mem.getPwd().equals(member.getPwd())){
+    		if(temp.isPwd(member.getPwd())){
     			removeMember(member.getUid());
     			//로그인한 회원 session정보 삭제
 //    			session.invalidate();
     			//완료되었음을 알림
-    			message="회원정보를 삭제하였습니다.";
+    			jsonObject.put("message", "회원정보를 삭제하였습니다.");
+    			jsonObject.put("status",true);
+
     		}
     		else{
-    			message="회원정보와 비밀번호가 일치하지 않습니다.";
+    			jsonObject.put("message", "회원정보와 비밀번호가 일치하지 않습니다.");
+    			jsonObject.put("status",true);
     		}
     	}
-		
-		return message;
+		return jsonObject;
 	}
 	//회원정보 수정
-	public ResultMember reviseMember(Member member) {
-		ResultMember result = new ResultMember();
-		String message="";
+	public JSONObject reviseMember(Member member) {
+		JSONObject jsonObject = new JSONObject();
 		//Member member = new Member(uid,name,pwd,age,phone,address,gender);
-    	Member mem = getMember(member.getUid());
+    	Member temp = getMember(member.getUid());
     	//빈칸이면 수정 안하기
     	if(!member.getPwd().isEmpty()){
-    		mem.setPwd(member.getPwd());
+    		temp.setPwd(member.getPwd());
     	}
     	if(!member.getName().isEmpty()){
-    		mem.setName(member.getName());
+    		temp.setName(member.getName());
     	}
     	if(!member.getAge().isEmpty()){
-    		mem.setAge(member.getAge());
+    		temp.setAge(member.getAge());
     	}
     	if(!member.getPhone().isEmpty()){
-    		mem.setPhone(member.getPhone());
+    		temp.setPhone(member.getPhone());
     	}
     	if(!member.getAddress().isEmpty()){
-    		mem.setAddress(member.getAddress());
+    		temp.setAddress(member.getAddress());
     	}
     	if(!member.getGender().isEmpty()){
-    		mem.setGender(member.getGender());
+    		temp.setGender(member.getGender());
     	}
-    	updateMember(mem);
-    	message="회원정보 수정이 완료되었습니다.";
-    	result.setMember(mem);
-    	result.setMessage(message);
-    	
-    	
-    	return result;
+    	updateMember(temp);
+    	jsonObject.put("message","회원정보 수정이 완료되었습니다.");
+    	jsonObject.put("loginMember", temp);
+
+    	return jsonObject;
 	}
-	public ResultMember uidFind(Member member) {
-		ResultMember result = new ResultMember();
+	public JSONObject uidFind(Member member) {
+		JSONObject jsonObject = new JSONObject();
 		//Optional로 나온 회원정보 받아오기
     	Optional<Member> userInfo = findIDMember(member.getName(),member.getPhone());
-    	String message = "";
     	//값이 존재하지 않으면
     	if(!userInfo.isPresent()){
-    		message="회원가입 정보가 없습니다.";
-    		result.setMessage(message);
+    		jsonObject.put("message", "회원가입 정보가 없습니다.");
     	}else{
-    		message="회원님의 아이디는 ";
-    		Member mem = userInfo.get();
-    		result.setMember(mem);
-    		result.setMessage(message);
-        	//회원의 아이디값 반환
-        	//request.setAttribute("uid", mem.getUid());
+    		Member temp = userInfo.get();
+    		jsonObject.put("message", "회원님의 아이디는 "+temp.getUid());
     	}
-    	return result;
+    	return jsonObject;
 	}
 	//////////////////////
 	// 아이디 존재여부확인
@@ -202,16 +187,22 @@ public class MemberService {
 		return memberDAO.getMemberList();
 	}
 
-	////////////////////////
-	//회원정보 기록하기
-	////////////////////////
-//	public static void saveFileMemberMap() {
-//		memberDAO.saveFileMemberMap();
-//
-//	}// private void saveFileMemberList()
-	
 	public void updateMember(Member member) {
 		memberDAO.updateMember(member);
+	}
+
+
+
+	public JSONObject index(Member member) {
+		JSONObject jsonObject = new JSONObject();
+		
+		if(member != null)
+			jsonObject.put("equalsAdmin",member.isAdmin());
+		
+		
+		
+		return jsonObject;
+		
 	}
 	
 }

@@ -37,7 +37,7 @@
     </header>
 </div>
   <div id="contain">
-    <form action="/myProject/RemoveMember.do" method="get" autocomplete="off" >
+    <form action="/myProject/RemoveMember.do" method="get" autocomplete="off" onsubmit="return false;">
         <h2>회원 탈퇴</h2>
         <div class="message">회원탈퇴을 위해 비밀번호를 입력해주세요</div>
         <div class="input-box">
@@ -45,10 +45,34 @@
             <label for="pwd">비밀번호 확인</label>
             <div id="pwdErrorMessage"></div>
         </div>
-        <input type="submit" value="회원 탈퇴"/>
+        <input type="submit" value="회원 탈퇴" id="removeMember"/>
         <input type="reset" value="초기화"/>
     </form>
     <script src="/myProject/js/inputCheckPWD.js"></script>
+    
+    <script>
+   	document.querySelector("#removeMember").addEventListener("click", e => {
+   	    const param = {
+   		        pwd: pwd.value
+   		      };
+
+   		      fetch("RemoveMember.do", {
+   		        method: "POST",
+   		        headers: {
+   		          "Content-Type": "application/json; charset=UTF-8",
+   		        },
+   		        body: JSON.stringify(param),
+   		      })
+   		      .then((response) => response.json())
+   		      .then((json) => {
+   		    	  alert(json.message);
+   		          if (json.status) {
+   		        	  location.href = "Index.do"; 
+   		          }
+   		      });
+   	});
+    
+    </script>
 </div>
 </body>
 </html>

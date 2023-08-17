@@ -11,13 +11,13 @@
     </head>
     <body>
     <div id="container">
-        <form action="${contextPath }/ReviseMember.do" method="get" autocomplete="off" >
+        <form action="${contextPath }/ReviseMember.do" method="get" autocomplete="off" onsubmit="return false;">
             <!-- 현재 아이디를 기본으로 입력하고 있어서 아이디 변경은 없었으면 좋겠다...jsp인가? -->
             <table class="tb">
                 <caption><span>${loginMember.uid }</span>님의 정보수정 페이지</caption>
                 <tr>
                     <th class="col">아이디</th>
-                    <td>${loginMember.uid}</td>
+                    <td><input id="uid" type="text" name="uid" value="${loginMember.uid}" readonly/></td>
                 </tr>
                 <tr>
                     <th class="col"><label for="pwd">비밀번호</label></th>
@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <th class="col"> <label for="name">이름</label></th>
-                    <td><input type="text" name="name" id="name"/><br/></td>
+                    <td><input type="text" name="name" id="uname"/><br/></td>
                 </tr>
                 <tr>
                     <th class="col"><label for="phone">전화번호</label></th>
@@ -59,11 +59,42 @@
                     </td>
                 </tr>
             </table>
-            <input id="insertMember" type="submit" value="회원정보수정"/>
+            <input id="reviseMember" type="submit" value="회원정보수정"/>
             <input type="reset" value="초기화"/>
         </form>
     </div>
-    <script src="${contextPath }/js/pwdEquals.js"></script>
+    <%-- <script src="${contextPath }/js/pwdEquals.js"></script> --%>
     <script src="${contextPath }/js/inputCheck.js"></script>
+    <script>
+    var radioValue = document.querySelector('input[name="gender"]:checked').value;
+    document.querySelector("#reviseMember").addEventListener("click", e => {
+        const param = {
+        		uid:uid.value,
+    	        pwd: pwd.value,
+    	        name: uname.value,
+    	        phone: phone.value,
+    	        address : address.value,
+    	        gender : radioValue,
+    	        age: age.value
+    	      };
+
+    	      fetch("ReviseMember.do", {
+    	        method: "POST",
+    	        headers: {
+    	          "Content-Type": "application/json; charset=UTF-8",
+    	        },
+    	        body: JSON.stringify(param),
+    	      })
+    	      .then((response) => response.json())
+    	      .then((json) => {
+    	    	  alert(json.message);
+				location.href = "View.do"; 
+    	         
+    	      });
+    	
+    });
+    
+    </script>
+    
     </body>
     </html>

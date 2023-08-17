@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div id="container">
-		<form id="insertBoard" action="${contextPath }/InsertBoard.do" method="post" autocomplete="off">
+		<form id="insertBoard" action="${contextPath }/InsertBoard.do" method="post" autocomplete="off" onsubmit="return false;">
 			<!-- 현재 아이디를 기본으로 입력하고 있어서 아이디 변경은 없었으면 좋겠다...jsp인가? -->
 			<table class="tb">
 				<caption>
@@ -59,6 +59,35 @@
     			e.preventDefault();
     		}
     	});
+    	
+    	document.querySelector("#insertMember").addEventListener("click", e => {
+    	    const param = {
+    		        boardid: boardid.value,
+    		        title: title.value,
+    		        contents: contents.value,
+    		        phone: phone.value,
+    		        address : address.value,
+    		        gender : radioValue,
+    		        age: age.value
+    		      };
+
+    		      fetch("InsertMember.do", {
+    		        method: "POST",
+    		        headers: {
+    		          "Content-Type": "application/json; charset=UTF-8",
+    		        },
+    		        body: JSON.stringify(param),
+    		      })
+    		      .then((response) => response.json())
+    		      .then((json) => {
+    		    	  alert(json.message);
+    		          if (json.status) {
+    		        	  location.href = "loginForm.do"; 
+    		          }
+    		      });
+    		
+    	});
+    	
     </script>
 </body>
 </html>

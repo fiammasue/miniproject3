@@ -25,15 +25,15 @@
         	</c:when>
         	<c:when test="${(not empty loginMember) && equalsAdmin }">
 	        	<ul class="members" id="loggedInOptions">
-	                <li><a href="/myProject/LogoutMember.do" id="logoutToggle">로그아웃</a></li>
-	                <li><a href="/myProject/View.do">마이페이지</a></li>
-        			<li><a href="/myProject/AllMemberShow.do">회원전체보기</a></li>
+	                <li><input type="button" id="logoutToggle" value="로그아웃"/></li>
+	                <li><a href="<c:url value='/member/View.do'/>">마이페이지</a></li>
+        			<li><a href="<c:url value='/member/AllMemberShow.do'/>">회원전체보기</a></li>
         		</ul>
         	</c:when>
         	<c:when test="${not empty loginMember}">
         		<ul class="members" id="loggedInOptions">
 	                <li><input type="button" id="logoutToggle" value="로그아웃"/></li>
-	                <li><a href="/myProject/View.do">마이페이지</a></li>
+	                <li><a href="<c:url value='/member/View.do'/>">마이페이지</a></li>
 	           </ul>
         	</c:when>
         	
@@ -61,15 +61,15 @@
                         <li><a href="#">고딩</a></li>
                     </ul>
                     </li>
-                    <li><a href="/myProject/AllNotice.do">공지사항</a></li>
-                    <li><a href="/myProject/AllBoard.do">게시판</a></li>
+                    <li><a href="<c:url value='/board/AllNotice.do'/>">공지사항</a></li>
+                    <li><a href="<c:url value='/board/AllBoard.do'/>">게시판</a></li>
                 </ul>
             </nav>
         </header>
         <!-- 슬라이드 그림부분 -->
         <div id="slideShow"> 
             <div id="slides">
-                <img src="/myProject/images/slide01.jpg" alt="">
+                <img src='<c:url value="/images/slide01.jpg"/>' alt="">
                 <img src="/myProject/images/slide02.jpg" alt="">
                 <img src="/myProject/images/slide03.jpg" alt="">
                 <button id="prev">&lang;</button>
@@ -176,15 +176,24 @@
     <!-- <script src="js/loginState.js"></script> -->
     <script>
     document.querySelector("#logoutToggle").addEventListener("click", e => {
-        fetch("LogoutMember.do")
-        .then((response) => response.json())
-        .then((json) => {
-            alert(json.message);
-            if (json.status) {
-                location.href = 'Index.do';
-            }
-        });
+
+   	      fetch("LogoutMember.do", {
+   	        method: "POST",
+   	        headers: {
+   	          "Content-Type": "application/json; charset=UTF-8",
+   	        },
+   	      })
+   	      .then((response) => response.json())
+   	      .then((json) => {
+   	    	  alert(json.message);
+   	          if (json.status) {
+   	        	  location.href = "Index.do"; 
+   	          }
+   	      });
+    	
     });
+
+    
 
     </script>
 </body>

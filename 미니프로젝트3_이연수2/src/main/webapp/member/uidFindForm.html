@@ -38,10 +38,10 @@
     </div>
     <div id="contain">
         
-    <form action="/myProject/UidFind.do" method="get" autocomplete="off" >
+    <form action="/myProject/UidFind.do" method="get" autocomplete="off" onsubmit="return false;">
         <h2>아이디 찾기</h2>
         <div class="input-box">
-            <input id="name" type="text" name="name" placeholder="이름" required/>
+            <input id="uname" type="text" name="name" placeholder="이름" required/>
             <label for="name">이름</label>
         </div>
         <div class="input-box">
@@ -49,12 +49,37 @@
             <label for="phone">전화번호</label>
         </div>
         
-        <input type="submit" value="아이디찾기"/>
+        <input type="submit" value="아이디찾기" id="uidFind"/>
         <input type="reset" value="초기화"/>
     </form>
     
     <script src="/myProject/js/inputCheckNAME.js"></script>
     <script src="/myProject/js/inputCheckPHONE.js"></script>
+    
+    <script>
+   	
+   	document.querySelector("#uidFind").addEventListener("click", e => {
+   	    const param = {
+   		        name: uname.value,
+   		        phone:phone.value
+   		      };
+
+   		      fetch("UidFind.do", {
+   		        method: "POST",
+   		        headers: {
+   		          "Content-Type": "application/json; charset=UTF-8",
+   		        },
+   		        body: JSON.stringify(param),
+   		      })
+   		      .then((response) => response.json())
+   		      .then((json) => {
+   		    	  alert(json.message);
+   		        location.href = "loginForm.html"; 
+
+   		      });
+   	});
+   	
+   	</script>
 </div>
 </body>
 </html>

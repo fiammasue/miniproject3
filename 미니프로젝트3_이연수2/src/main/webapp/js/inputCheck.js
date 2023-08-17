@@ -1,5 +1,5 @@
 //이름 유효성 검사
-var name1 = document.querySelector("#name");
+var name1 = document.querySelector("#uname");
 
 name1.addEventListener("input", function() {
   var value = this.value;

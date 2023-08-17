@@ -230,16 +230,20 @@ public class OneServlet extends HttpServlet {
 				String result = "";
 				switch (method.getParameterCount()) {
 				case 2: 
-					result = (String) method.invoke(obj, request, response);
-					if (result.endsWith(".jsp")) {
-						RequestDispatcher rd = request.getRequestDispatcher(viewPath + result);
-						rd.forward(request, response);
+					if (contextType != null && contextType.equalsIgnoreCase("application/json; charset=UTF-8")) {
+						jsonProcess(method, obj, request, response);
 					} else {
-						response.sendRedirect(request.getContextPath() + "/" + result);
+						result = (String) method.invoke(obj, request, response);
+						if (result.endsWith(".jsp")) {
+							RequestDispatcher rd = request.getRequestDispatcher(viewPath + result);
+							rd.forward(request, response);
+						} else {
+							response.sendRedirect(request.getContextPath() + "/" + result);
+						}
 					}
 					break;
 				case 3:
-					if (contextType.equals("application/x-www-form-urlencoded")) {
+					if (contextType ==null ||contextType.equals("application/x-www-form-urlencoded")) {
 						formUrlencoded(method, obj, request, response);
 					} else if (contextType.equalsIgnoreCase("application/json; charset=UTF-8")) {
 						jsonProcess(method, obj, request, response);
@@ -292,8 +296,7 @@ public class OneServlet extends HttpServlet {
 		
 	}
 	
-	private void jsonProcess(Method method, Object obj, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+private void jsonProcess(Method method, Object obj, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), "utf-8"));
 		StringBuilder data = new StringBuilder();
@@ -305,46 +308,47 @@ public class OneServlet extends HttpServlet {
 			data.append(line);
 		}
 		System.out.println("json 문자열 = " + data.toString());
-		//json 객체 생성 
-		JSONObject jsonObject = new JSONObject(data.toString());
 		
 		Class paramClass = method.getParameterTypes()[0];
-		//객체 생성 
-		Object paramObj = paramClass.getDeclaredConstructor().newInstance();
-		for (String key : jsonObject.keySet()) {
-			try {
-				Field field = paramClass.getDeclaredField(key);
-				field.setAccessible(true);
-				if (field.getType().equals(String.class)) {
-					field.set(paramObj, jsonObject.getString(key));
-				} else if(field.getType().equals(int.class)) {
-					field.set(paramObj, jsonObject.getInt(key));
-				} else if(field.getType().equals(float.class)) {
-					field.set(paramObj, jsonObject.getFloat(key));
-				} else if(field.getType().equals(double.class)) {
-					field.set(paramObj, jsonObject.getDouble(key));
-				} else if(field.getType().equals(int[].class)) {
-					JSONArray arr = jsonObject.getJSONArray(key);
-					int[] arrInt = new int[arr.length()];
-					for(int i =0;i<arr.length();i++) {
-						System.out.println(arr.get(i));
-						arrInt[i] = (Integer)arr.get(i);
-					}
-					field.set(paramObj, arrInt);
-//					String [] values = entry.getValue();
-//					int [] arr = new  int[entry.getValue().length];
-//					for (int i=0;i<arr.length;i++) {
-//						arr[i] = Integer.parseInt(values[i]); 
-//					}
-//					field.set(paramObj, arr);
-				} 
-				
-			}catch (Exception e) {
-				
+		Object paramObj = null;
+		String result = "";
+		
+		if (paramClass.equals(HttpServletRequest.class)) {
+			result = (String) method.invoke(obj, request, response);
+		} else {
+			//json 객체 생성 
+			JSONObject jsonObject = new JSONObject(data.toString());
+			
+			//객체 생성 
+			paramObj = paramClass.getDeclaredConstructor().newInstance();
+			for (String key : jsonObject.keySet()) {
+				try {
+					Field field = paramClass.getDeclaredField(key);
+					field.setAccessible(true);
+					if (field.getType().equals(String.class)) {
+						field.set(paramObj, jsonObject.getString(key));
+					} else if(field.getType().equals(int.class)) {
+						field.set(paramObj, jsonObject.getInt(key));
+					} else if(field.getType().equals(float.class)) {
+						field.set(paramObj, jsonObject.getFloat(key));
+					} else if(field.getType().equals(String[].class)) {
+						field.set(paramObj, jsonObject.getDouble(key));
+					} else if(field.getType().equals(int[].class)) {
+	//					String [] values = entry.getValue();
+	//					int [] arr = new  int[entry.getValue().length];
+	//					for (int i=0;i<arr.length;i++) {
+	//						arr[i] = Integer.parseInt(values[i]); 
+	//					}
+	//					field.set(paramObj, arr);
+					} 
+					
+				}catch (Exception e) {
+					
+				}
 			}
+			result = (String) method.invoke(obj, paramObj, request, response);
 		}
 		
-		String result = (String) method.invoke(obj, paramObj, request, response);
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().append(result);

@@ -24,18 +24,18 @@
 					<th>작성자</th>
 				</tr>
 
-				<c:if test="${not empty boardList}">
-					<c:forEach var="board" items="${boardList }">
+				<c:if test="${not empty noticeList}">
+					<c:forEach var="notice" items="${noticeList }">
 						<tr>
 						<c:if test='${ (not empty loginMember) && (loginMember.uid eq "root") }'>
 							<th><input type='checkbox' class='boardid' name='boardid'
-								value='${board.boardid}'></th>
+								value='${notice.boardid}'></th>
 							</c:if>
-							<td class="kk">${board.boardid}</td>
-							<td><a href='/myProject/ViewOneBoard.do?boardid=${board.boardid}'
-								class="col">${board.title}</a></td>
-							<td>${board.hit}</td>
-							<td>${board.memberid}</td>
+							<td class="kk">${notice.boardid}</td>
+							<td><a href="<c:url value='/board/ViewOneBoard.do?boardid=${board.boardid}'/>"
+								class="col">${notice.title}</a></td>
+							<td>${notice.hit}</td>
+							<td>${notice.memberid}</td>
 						</tr>
 					</c:forEach>
 
